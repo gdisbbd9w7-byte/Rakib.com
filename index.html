@@ -1,143 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Money App</title>
+
+<title>Ad Dashboard</title>
+
+<!-- Monetag Ad Script -->
+<script src='//libtl.com/sdk.js' data-zone='10832265' data-sdk='show_10832265'></script>
 
 <style>
-body {
-  font-family: Arial;
-  background: #f2f2f2;
-  margin: 0;
+body{
+    font-family: Arial;
+    background:#0f172a;
+    color:#fff;
+    text-align:center;
+    margin:0;
 }
-
-.container {
-  max-width: 350px;
-  margin: 30px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  text-align: center;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+.container{
+    max-width:350px;
+    margin:40px auto;
+    padding:20px;
 }
-
-h1 { color: #1976d2; }
-
-.stats {
-  background: #eee;
-  padding: 15px;
-  border-radius: 10px;
-  margin: 15px 0;
-  display: flex;
-  justify-content: space-around;
+.card{
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
 }
-
-.btn {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  color: white;
+button{
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border:none;
+    border-radius:10px;
+    background:#4a6bff;
+    color:white;
+    font-size:16px;
 }
-
-.blue { background:#1976d2; }
-.green { background:#28a745; }
-.red { background:#dc3545; }
 </style>
 </head>
 
 <body>
 
 <div class="container">
-  <h1>Telegram Mini Earning App</h1>
-  <p>Developed by <b>EMRAN HOSSAIN</b></p>
 
-  <div class="stats">
-    <div>
-      <h2 id="ads">0</h2>
-      <p>Completed Ads</p>
-    </div>
-    <div>
-      <h2 id="points">0</h2>
-      <p>Total Points</p>
-    </div>
-  </div>
+<h2>🔥 EMRAN HOSSAIN Dashboard</h2>
 
-  <button class="btn blue" onclick="rewardAd()">Reward Interstitial</button>
-  <button class="btn blue" onclick="popupAd()">Reward Popup</button>
-  <button class="btn blue" onclick="inAppAd()">In-App Interstitial</button>
+<div class="card">
+<p>👤 User ID: <span id="uid"></span></p>
+<p id="status">⏳ Loading Ad...</p>
+</div>
 
-  <button class="btn green" onclick="withdraw()">Withdraw</button>
-  <button class="btn red" onclick="reset()">Reset Count</button>
+<button onclick="showAd()">📢 Show Ad</button>
+
 </div>
 
 <script>
-// Load data
-let ads = parseInt(localStorage.getItem("ads")) || 0;
-let points = parseInt(localStorage.getItem("points")) || 0;
 
-updateUI();
+// fallback link
+const fallbackLink = "https://omg10.com/4/10838634";
 
-function updateUI(){
-  document.getElementById("ads").innerText = ads;
-  document.getElementById("points").innerText = points;
+// create user id
+let uid = localStorage.getItem("uid");
+if(!uid){
+    uid = "user_" + Math.floor(Math.random()*999999);
+    localStorage.setItem("uid", uid);
+}
+document.getElementById("uid").innerText = uid;
+
+// check ad ready
+function checkAd(){
+    if(typeof window.show_10832265 === "function"){
+        document.getElementById("status").innerText = "✅ Ad Ready";
+    } else {
+        setTimeout(checkAd, 1000);
+    }
+}
+checkAd();
+
+// show ad
+function showAd(){
+
+    if(typeof window.show_10832265 === "function"){
+
+        document.getElementById("status").innerText = "📢 Showing Ad...";
+
+        window.show_10832265()
+        .then(()=>{
+            document.getElementById("status").innerText = "✅ Ad Finished";
+        })
+        .catch(()=>{
+            runFallback();
+        });
+
+    } else {
+        runFallback();
+    }
 }
 
-// Save
-function save(){
-  localStorage.setItem("ads", ads);
-  localStorage.setItem("points", points);
-  updateUI();
+// fallback system
+function runFallback(){
+    document.getElementById("status").innerText = "⚠️ Backup Ad...";
+    window.open(fallbackLink, "_blank");
 }
 
-// Reward Interstitial → লিঙ্ক ওপেন হবে
-function rewardAd(){
-  window.open("https://heygr74.blogspot.com/2026/04/dhhrgffv.html", "_blank");
-  
-  // পয়েন্ট/এড কন্টিনিউ করতে চাইলে আনকমেন্ট করো
-  /*
-  ads++;
-  points += 10;
-  save();
-  alert("Reward Added!");
-  */
-}
-
-// Popup → Monetag link
-function popupAd(){
-  window.open("https://omg10.com/4/10826084", "_blank");
-
-  setTimeout(() => {
-    ads++;
-    points += 5;
-    save();
-    alert("Reward Added!");
-  }, 3000);
-}
-
-// In-App
-function inAppAd(){
-  ads++;
-  points += 3;
-  save();
-}
-
-// Withdraw → WhatsApp
-function withdraw(){
-  let msg = `Hello, I want to withdraw.\nPoints: ${points}`;
-  let url = "https://wa.me/8801320512829?text=" + encodeURIComponent(msg);
-  window.open(url, "_blank");
-}
-
-// Reset
-function reset(){
-  ads = 0;
-  points = 0;
-  save();
-}
 </script>
 
 </body>
