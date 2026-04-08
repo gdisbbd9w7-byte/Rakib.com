@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Ad Dashboard</title>
+<title>Pro Ad System</title>
 
-<!-- Monetag Ad Script -->
+<!-- Monetag SDK -->
 <script src='//libtl.com/sdk.js' data-zone='10832265' data-sdk='show_10832265'></script>
 
 <style>
@@ -15,22 +15,22 @@ body{
     background:#0f172a;
     color:#fff;
     text-align:center;
-    margin:0;
 }
-.container{
-    max-width:350px;
-    margin:40px auto;
+.box{
+    max-width:380px;
+    margin:auto;
     padding:20px;
 }
 .card{
     background:#1e293b;
     padding:15px;
     border-radius:10px;
+    margin-top:10px;
 }
 button{
     width:100%;
     padding:12px;
-    margin-top:15px;
+    margin-top:10px;
     border:none;
     border-radius:10px;
     background:#4a6bff;
@@ -42,25 +42,27 @@ button{
 
 <body>
 
-<div class="container">
+<div class="box">
 
-<h2>🔥 EMRAN HOSSAIN Dashboard</h2>
+<h2>🔥 EMRAN HOSSAIN PRO ADS</h2>
 
 <div class="card">
-<p>👤 User ID: <span id="uid"></span></p>
-<p id="status">⏳ Loading Ad...</p>
+<p>👤 User: <span id="uid"></span></p>
+<p id="status">⏳ Loading Ads...</p>
 </div>
 
-<button onclick="showAd()">📢 Show Ad</button>
+<button onclick="showRewardAd()">🎁 Rewarded Ad</button>
+<button onclick="showPopupAd()">⚡ Popup Ad</button>
+<button onclick="startInApp()">📲 Auto In-App Ads</button>
 
 </div>
 
 <script>
 
-// fallback link
+// fallback
 const fallbackLink = "https://omg10.com/4/10838634";
 
-// create user id
+// user id
 let uid = localStorage.getItem("uid");
 if(!uid){
     uid = "user_" + Math.floor(Math.random()*999999);
@@ -68,28 +70,27 @@ if(!uid){
 }
 document.getElementById("uid").innerText = uid;
 
-// check ad ready
+// check sdk
 function checkAd(){
     if(typeof window.show_10832265 === "function"){
-        document.getElementById("status").innerText = "✅ Ad Ready";
+        document.getElementById("status").innerText = "✅ Ads Ready";
     } else {
-        setTimeout(checkAd, 1000);
+        setTimeout(checkAd,1000);
     }
 }
 checkAd();
 
-// show ad
-function showAd(){
+
+// 🎁 Rewarded Interstitial
+function showRewardAd(){
 
     if(typeof window.show_10832265 === "function"){
 
-        document.getElementById("status").innerText = "📢 Showing Ad...";
+        document.getElementById("status").innerText = "🎁 Showing Reward Ad...";
 
-        window.show_10832265()
-        .then(()=>{
-            document.getElementById("status").innerText = "✅ Ad Finished";
-        })
-        .catch(()=>{
+        window.show_10832265().then(()=>{
+            document.getElementById("status").innerText = "✅ Reward Given 🎉";
+        }).catch(()=>{
             runFallback();
         });
 
@@ -98,7 +99,51 @@ function showAd(){
     }
 }
 
-// fallback system
+
+// ⚡ Rewarded Popup
+function showPopupAd(){
+
+    if(typeof window.show_10832265 === "function"){
+
+        document.getElementById("status").innerText = "⚡ Opening Popup Ad...";
+
+        window.show_10832265('pop').then(()=>{
+            document.getElementById("status").innerText = "✅ Popup Completed";
+        }).catch(()=>{
+            runFallback();
+        });
+
+    } else {
+        runFallback();
+    }
+}
+
+
+// 📲 In-App Interstitial (Auto Ads)
+function startInApp(){
+
+    if(typeof window.show_10832265 === "function"){
+
+        document.getElementById("status").innerText = "📲 Auto Ads Started";
+
+        window.show_10832265({
+            type: 'inApp',
+            inAppSettings: {
+                frequency: 2,
+                capping: 0.1,
+                interval: 30,
+                timeout: 5,
+                everyPage: false
+            }
+        });
+
+    } else {
+        runFallback();
+    }
+}
+
+
+// fallback
 function runFallback(){
     document.getElementById("status").innerText = "⚠️ Backup Ad...";
     window.open(fallbackLink, "_blank");
