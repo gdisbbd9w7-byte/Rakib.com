@@ -15,6 +15,7 @@ body{
     background:#0f172a;
     color:#fff;
     text-align:center;
+    margin:0;
 }
 .box{
     max-width:380px;
@@ -24,18 +25,21 @@ body{
 .card{
     background:#1e293b;
     padding:15px;
-    border-radius:10px;
+    border-radius:12px;
     margin-top:10px;
 }
 button{
     width:100%;
-    padding:12px;
+    padding:14px;
     margin-top:10px;
     border:none;
-    border-radius:10px;
+    border-radius:12px;
     background:#4a6bff;
     color:white;
     font-size:16px;
+}
+button:active{
+    opacity:0.7;
 }
 </style>
 </head>
@@ -53,7 +57,7 @@ button{
 
 <button onclick="showRewardAd()">🎁 Rewarded Ad</button>
 <button onclick="showPopupAd()">⚡ Popup Ad</button>
-<button onclick="startInApp()">📲 Auto In-App Ads</button>
+<button onclick="startInApp()">📲 Auto Ads</button>
 
 </div>
 
@@ -70,61 +74,75 @@ if(!uid){
 }
 document.getElementById("uid").innerText = uid;
 
-// check sdk
+// check sdk ready
 function checkAd(){
     if(typeof window.show_10832265 === "function"){
         document.getElementById("status").innerText = "✅ Ads Ready";
     } else {
-        setTimeout(checkAd,1000);
+        setTimeout(checkAd, 1000);
     }
 }
 checkAd();
 
+// prevent spam click
+let busy = false;
 
-// 🎁 Rewarded Interstitial
+// 🎁 Rewarded Ad
 function showRewardAd(){
+
+    if(busy) return;
+    busy = true;
 
     if(typeof window.show_10832265 === "function"){
 
         document.getElementById("status").innerText = "🎁 Showing Reward Ad...";
 
         window.show_10832265().then(()=>{
-            document.getElementById("status").innerText = "✅ Reward Given 🎉";
+            document.getElementById("status").innerText = "✅ Reward Received 🎉";
+            busy = false;
         }).catch(()=>{
+            busy = false;
             runFallback();
         });
 
     } else {
+        busy = false;
         runFallback();
     }
 }
 
 
-// ⚡ Rewarded Popup
+// ⚡ Popup Ad
 function showPopupAd(){
+
+    if(busy) return;
+    busy = true;
 
     if(typeof window.show_10832265 === "function"){
 
-        document.getElementById("status").innerText = "⚡ Opening Popup Ad...";
+        document.getElementById("status").innerText = "⚡ Opening Popup...";
 
         window.show_10832265('pop').then(()=>{
-            document.getElementById("status").innerText = "✅ Popup Completed";
+            document.getElementById("status").innerText = "✅ Popup Done";
+            busy = false;
         }).catch(()=>{
+            busy = false;
             runFallback();
         });
 
     } else {
+        busy = false;
         runFallback();
     }
 }
 
 
-// 📲 In-App Interstitial (Auto Ads)
+// 📲 Auto In-App Ads
 function startInApp(){
 
     if(typeof window.show_10832265 === "function"){
 
-        document.getElementById("status").innerText = "📲 Auto Ads Started";
+        document.getElementById("status").innerText = "📲 Auto Ads Running";
 
         window.show_10832265({
             type: 'inApp',
