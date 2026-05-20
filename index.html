@@ -4,166 +4,470 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pro Ad System</title>
+<title>ফ্রী ইনকাম </title>
 
-<script src='//libtl.com/sdk.js' data-zone='10842680' data-sdk='show_10842680'></script>
+<!-- MONETAG SDK -->
+<script src='//libtl.com/sdk.js'
+data-zone='10842680'
+data-sdk='show_10842680'></script>
 
 <style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
 body{
-    font-family: Arial;
-    background:#0f172a;
-    color:#fff;
-    text-align:center;
-    margin:0;
+background:#020617;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+padding:15px;
 }
-.box{
-    max-width:380px;
-    margin:auto;
-    padding:20px;
+
+.container{
+width:100%;
+max-width:400px;
 }
+
 .card{
-    background:#1e293b;
-    padding:15px;
-    border-radius:12px;
-    margin-top:10px;
+background:#0f172a;
+padding:20px;
+border-radius:22px;
+box-shadow:0 0 25px rgba(0,0,0,0.5);
 }
+
+.title{
+text-align:center;
+font-size:32px;
+font-weight:bold;
+margin-bottom:20px;
+}
+
+.title span{
+color:#4f46e5;
+}
+
+.info{
+background:#020617;
+padding:15px;
+border-radius:15px;
+line-height:35px;
+margin-bottom:15px;
+}
+
+.balance{
+font-size:28px;
+font-weight:bold;
+color:#00ff99;
+}
+
+.status{
+font-weight:bold;
+color:#facc15;
+}
+
 button{
-    width:100%;
-    padding:14px;
-    margin-top:10px;
-    border:none;
-    border-radius:12px;
-    background:#4a6bff;
-    color:white;
-    font-size:16px;
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+margin-top:12px;
+font-size:16px;
+font-weight:bold;
+color:white;
+cursor:pointer;
 }
-button:active{
-    opacity:0.7;
+
+.reward-btn{
+background:#4f46e5;
 }
+
+.popup-btn{
+background:#9333ea;
+}
+
+.auto-btn{
+background:#15803d;
+}
+
+.withdraw-btn{
+background:#b91c1c;
+}
+
+.withdraw-box{
+margin-top:15px;
+}
+
+.withdraw-box select,
+.withdraw-box input{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+margin-top:10px;
+background:#020617;
+color:white;
+font-size:15px;
+outline:none;
+}
+
+.notice{
+margin-top:18px;
+text-align:center;
+font-size:13px;
+color:#94a3b8;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="box">
-
-<h2>🔥 EMRAN HOSSAIN PRO ADS</h2>
+<div class="container">
 
 <div class="card">
-<p>👤 User: <span id="uid"></span></p>
-<p id="status">⏳ Loading Ads...</p>
+
+<div class="title">
+🔥 <span>EMRAN-</span>RAKIB
 </div>
 
-<button onclick="showRewardAd()">🎁 Rewarded Ad</button>
-<button onclick="showPopupAd()">⚡ Popup Ad</button>
-<button onclick="startInApp()">📲 Auto Ads</button>
+<div class="info">
+
+<p>
+👤 User:
+<span id="uid"></span>
+</p>
+
+<p>
+💰 Balance:
+<span class="balance">
+<span id="balance">0.00</span> ৳
+</span>
+</p>
+
+<p class="status" id="status">
+⏳ Connecting Ads...
+</p>
+
+</div>
+
+<button class="reward-btn"
+onclick="showRewardAd()">
+
+🎁 Watch Reward Ad (+0.15৳)
+
+</button>
+
+<button class="popup-btn"
+onclick="showPopupAd()">
+
+⚡ Popup Ad (+0.15৳)
+
+</button>
+
+<button class="auto-btn"
+onclick="startAutoAds()">
+
+📲 Start Auto Ads
+
+</button>
+
+<div class="withdraw-box">
+
+<select id="method">
+
+<option value="Bkash">
+📲 Bkash
+</option>
+
+<option value="Nagad">
+💰 Nagad
+</option>
+
+</select>
+
+<input type="number"
+id="number"
+placeholder="Enter Your Number">
+
+<button class="withdraw-btn"
+onclick="withdrawNow()">
+
+💸 Withdraw Request
+
+</button>
+
+</div>
+
+<div class="notice">
+Minimum Withdraw 50৳
+</div>
+
+</div>
 
 </div>
 
 <script>
 
-// fallback
-const fallbackLink = "https://omg10.com/4/10838634";
+// USER ID
 
-// user id
 let uid = localStorage.getItem("uid");
+
 if(!uid){
-    uid = "user_" + Math.floor(Math.random()*999999);
-    localStorage.setItem("uid", uid);
+
+uid =
+"USER_" +
+Math.floor(Math.random()*999999);
+
+localStorage.setItem("uid",uid);
+
 }
-document.getElementById("uid").innerText = uid;
 
-// check sdk ready
-function checkAd(){
-    if(typeof window.show_10832265 === "function"){
-        document.getElementById("status").innerText = "✅ Ads Ready";
-    } else {
-        setTimeout(checkAd, 1000);
-    }
+document.getElementById("uid")
+.innerText = uid;
+
+
+// BALANCE
+
+let balance =
+localStorage.getItem("balance");
+
+if(!balance){
+
+balance = 0;
+
+localStorage.setItem(
+"balance",
+balance
+);
+
 }
-checkAd();
 
-// prevent spam click
-let busy = false;
+updateBalance();
 
-// 🎁 Rewarded Ad
+function updateBalance(){
+
+document.getElementById("balance")
+.innerText =
+parseFloat(balance).toFixed(2);
+
+}
+
+
+// CHECK SDK
+
+function checkSDK(){
+
+if(typeof show_10842680 === "function"){
+
+document.getElementById("status")
+.innerText =
+"✅ Ads Ready";
+
+}else{
+
+document.getElementById("status")
+.innerText =
+"⚠️ Ads Loading...";
+
+setTimeout(checkSDK,1000);
+
+}
+
+}
+
+checkSDK();
+
+
+// ADD MONEY
+
+function addMoney(){
+
+balance =
+parseFloat(balance) + 0.15;
+
+localStorage.setItem(
+"balance",
+balance
+);
+
+updateBalance();
+
+}
+
+
+// REWARD AD
+
 function showRewardAd(){
 
-    if(busy) return;
-    busy = true;
+document.getElementById("status")
+.innerText =
+"🎁 Opening Reward Ad...";
 
-    if(typeof window.show_10832265 === "function"){
+if(typeof show_10842680 === "function"){
 
-        document.getElementById("status").innerText = "🎁 Showing Reward Ad...";
+show_10842680()
 
-        window.show_10832265().then(()=>{
-            document.getElementById("status").innerText = "✅ Reward Received 🎉";
-            busy = false;
-        }).catch(()=>{
-            busy = false;
-            runFallback();
-        });
+.then(()=>{
 
-    } else {
-        busy = false;
-        runFallback();
-    }
+addMoney();
+
+document.getElementById("status")
+.innerText =
+"✅ 0.15৳ Added";
+
+})
+
+.catch(()=>{
+
+document.getElementById("status")
+.innerText =
+"❌ Reward Ad Failed";
+
+});
+
+}else{
+
+document.getElementById("status")
+.innerText =
+"⚠️ SDK Not Ready";
+
+}
+
 }
 
 
-// ⚡ Popup Ad
+// POPUP AD
+
 function showPopupAd(){
 
-    if(busy) return;
-    busy = true;
+document.getElementById("status")
+.innerText =
+"⚡ Opening Popup...";
 
-    if(typeof window.show_10832265 === "function"){
+if(typeof show_10842680 === "function"){
 
-        document.getElementById("status").innerText = "⚡ Opening Popup...";
+show_10842680('pop')
 
-        window.show_10832265('pop').then(()=>{
-            document.getElementById("status").innerText = "✅ Popup Done";
-            busy = false;
-        }).catch(()=>{
-            busy = false;
-            runFallback();
-        });
+.then(()=>{
 
-    } else {
-        busy = false;
-        runFallback();
-    }
+addMoney();
+
+document.getElementById("status")
+.innerText =
+"✅ Popup Reward Added";
+
+})
+
+.catch(()=>{
+
+document.getElementById("status")
+.innerText =
+"❌ Popup Failed";
+
+});
+
+}else{
+
+document.getElementById("status")
+.innerText =
+"⚠️ Popup Not Ready";
+
+}
+
 }
 
 
-// 📲 Auto In-App Ads
-function startInApp(){
+// AUTO ADS
 
-    if(typeof window.show_10832265 === "function"){
+function startAutoAds(){
 
-        document.getElementById("status").innerText = "📲 Auto Ads Running";
+document.getElementById("status")
+.innerText =
+"📲 Auto Ads Running";
 
-        window.show_10832265({
-            type: 'inApp',
-            inAppSettings: {
-                frequency: 2,
-                capping: 0.1,
-                interval: 30,
-                timeout: 5,
-                everyPage: false
-            }
-        });
+if(typeof show_10842680 === "function"){
 
-    } else {
-        runFallback();
-    }
+show_10842680({
+
+type:'inApp',
+
+inAppSettings:{
+
+frequency:2,
+capping:0.1,
+interval:30,
+timeout:5,
+everyPage:false
+
+}
+
+});
+
+}else{
+
+document.getElementById("status")
+.innerText =
+"⚠️ Auto Ads Failed";
+
+}
+
 }
 
 
-// fallback
-function runFallback(){
-    document.getElementById("status").innerText = "⚠️ Backup Ad...";
-    window.open(fallbackLink, "_blank");
+// WITHDRAW
+
+function withdrawNow(){
+
+let method =
+document.getElementById("method").value;
+
+let number =
+document.getElementById("number").value;
+
+if(parseFloat(balance) < 50){
+
+alert(
+"Minimum Withdraw 50৳"
+);
+
+return;
+
+}
+
+if(number.length < 11){
+
+alert(
+"Enter Valid Number"
+);
+
+return;
+
+}
+
+alert(
+
+"✅ Withdraw Request Sent\n\n" +
+
+"Method: " + method +
+
+"\nNumber: " + number +
+
+"\nAmount: " +
+
+parseFloat(balance)
+.toFixed(2)
+
++ "৳"
+
+);
+
 }
 
 </script>
