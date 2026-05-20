@@ -1,15 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<title>ফ্রী ইনকাম </title>
+<title>Money Income</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <!-- MONETAG SDK -->
+
 <script src='//libtl.com/sdk.js'
 data-zone='10842680'
-data-sdk='show_10842680'></script>
+data-sdk='show_10842680'>
+</script>
 
 <style>
 
@@ -21,107 +29,163 @@ font-family:Arial,sans-serif;
 }
 
 body{
-background:#020617;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-padding:15px;
+background:#f3f4f6;
+padding-bottom:100px;
+}
+
+.header{
+background:#fff;
+padding:18px;
+font-size:24px;
+font-weight:bold;
+box-shadow:0 2px 10px rgba(0,0,0,.05);
+position:sticky;
+top:0;
+z-index:100;
 }
 
 .container{
-width:100%;
-max-width:400px;
+padding:15px;
 }
 
 .card{
-background:#0f172a;
-padding:20px;
-border-radius:22px;
-box-shadow:0 0 25px rgba(0,0,0,0.5);
-}
-
-.title{
-text-align:center;
-font-size:32px;
-font-weight:bold;
-margin-bottom:20px;
-}
-
-.title span{
-color:#4f46e5;
-}
-
-.info{
-background:#020617;
+background:#fff;
 padding:15px;
-border-radius:15px;
-line-height:35px;
+border-radius:20px;
 margin-bottom:15px;
+box-shadow:0 2px 10px rgba(0,0,0,.05);
 }
 
 .balance{
-font-size:28px;
+font-size:38px;
 font-weight:bold;
-color:#00ff99;
+margin-top:5px;
 }
 
 .status{
+margin-top:10px;
 font-weight:bold;
-color:#facc15;
+color:#ff9800;
+}
+
+.task{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#fafafa;
+padding:15px;
+border-radius:15px;
+margin-top:10px;
+}
+
+.task small{
+color:gray;
 }
 
 button{
-width:100%;
-padding:15px;
 border:none;
-border-radius:15px;
-margin-top:12px;
-font-size:16px;
+padding:12px 18px;
+border-radius:12px;
 font-weight:bold;
-color:white;
 cursor:pointer;
 }
 
-.reward-btn{
-background:#4f46e5;
+.orange{
+background:#ff9800;
+color:white;
 }
 
-.popup-btn{
-background:#9333ea;
+.blue{
+background:#2563eb;
+color:white;
 }
 
-.auto-btn{
-background:#15803d;
+.green{
+background:#22c55e;
+color:white;
 }
 
-.withdraw-btn{
-background:#b91c1c;
+.red{
+background:#ef4444;
+color:white;
+width:100%;
+margin-top:10px;
 }
 
-.withdraw-box{
-margin-top:15px;
+.page{
+display:none;
 }
 
-.withdraw-box select,
-.withdraw-box input{
+.active{
+display:block;
+}
+
+.bottom-nav{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:12px 0;
+box-shadow:0 -2px 10px rgba(0,0,0,.1);
+}
+
+.nav-btn{
+text-align:center;
+font-size:11px;
+font-weight:bold;
+color:#666;
+}
+
+.nav-btn i{
+display:block;
+font-size:22px;
+margin-bottom:5px;
+}
+
+input,select{
 width:100%;
 padding:14px;
-border:none;
 border-radius:12px;
+border:1px solid #ddd;
 margin-top:10px;
-background:#020617;
-color:white;
 font-size:15px;
-outline:none;
 }
 
-.notice{
-margin-top:18px;
+.profile{
 text-align:center;
-font-size:13px;
-color:#94a3b8;
+}
+
+.profile img{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid #2563eb;
+margin-bottom:15px;
+}
+
+.ref-box{
+background:#f8fafc;
+padding:15px;
+border-radius:15px;
+text-align:center;
+margin-top:10px;
+}
+
+.toast{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:12px;
+display:none;
+z-index:999;
 }
 
 </style>
@@ -129,85 +193,363 @@ color:#94a3b8;
 
 <body>
 
+<div class="toast"
+id="toast"></div>
+
+<div class="header">
+মানি ইনকাম
+</div>
+
 <div class="container">
+
+<!-- HOME -->
+
+<div id="home"
+class="page active">
 
 <div class="card">
 
-<div class="title">
-🔥 <span>EMRAN-</span>RAKIB
-</div>
+<div style="
+font-size:14px;
+color:gray;
+">
 
-<div class="info">
-
-<p>
-👤 User:
-<span id="uid"></span>
-</p>
-
-<p>
-💰 Balance:
-<span class="balance">
-<span id="balance">0.00</span> ৳
-</span>
-</p>
-
-<p class="status" id="status">
-⏳ Connecting Ads...
-</p>
+বর্তমান ব্যালেন্স
 
 </div>
 
-<button class="reward-btn"
-onclick="showRewardAd()">
+<div class="balance">
 
-🎁 Watch Reward Ad (+0.15৳)
+<span id="balance">
+0.00
+</span> ৳
+
+</div>
+
+<div class="status"
+id="status">
+
+এড প্রস্তুত
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>ডেইলি টাস্ক</h3>
+
+<div class="task">
+
+<div>
+
+<b>শর্ট এড দেখুন</b><br>
+
+<small>Rewarded Ad</small>
+
+</div>
+
+<button class="orange"
+onclick="rewardAd()">
+
+ক্লেইম
 
 </button>
 
-<button class="popup-btn"
-onclick="showPopupAd()">
+</div>
 
-⚡ Popup Ad (+0.15৳)
+<div class="task">
+
+<div>
+
+<b>পপআপ এড</b><br>
+
+<small>Popup Reward</small>
+
+</div>
+
+<button class="orange"
+onclick="popupAd()">
+
+ক্লেইম
 
 </button>
 
-<button class="auto-btn"
-onclick="startAutoAds()">
+</div>
 
-📲 Start Auto Ads
+<div class="task">
+
+<div>
+
+<b>ভিডিও এড</b><br>
+
+<small>In-App Ads</small>
+
+</div>
+
+<button class="blue"
+onclick="startAds()">
+
+স্টার্ট
 
 </button>
 
-<div class="withdraw-box">
+</div>
+
+</div>
+
+</div>
+
+<!-- WALLET -->
+
+<div id="wallet"
+class="page">
+
+<div class="card">
+
+<h2>উইথড্র</h2>
+
+<p style="margin-top:10px;">
+
+বর্তমান ব্যালেন্স:
+
+<b>
+<span id="walletBalance">
+0.00
+</span> ৳
+</b>
+
+</p>
+
+<input type="number"
+id="withdrawAmount"
+placeholder="টাকার পরিমাণ">
 
 <select id="method">
 
-<option value="Bkash">
-📲 Bkash
-</option>
+<option>বিকাশ</option>
 
-<option value="Nagad">
-💰 Nagad
-</option>
+<option>নগদ</option>
 
 </select>
 
 <input type="number"
 id="number"
-placeholder="Enter Your Number">
+placeholder="নাম্বার লিখুন">
 
-<button class="withdraw-btn"
+<button class="red"
 onclick="withdrawNow()">
 
-💸 Withdraw Request
+উইথড্র রিকুয়েস্ট
+
+</button>
+
+<button class="blue"
+style="width:100%;margin-top:10px;"
+onclick="toggleHistory()">
+
+হিস্টরি দেখুন
 
 </button>
 
 </div>
 
-<div class="notice">
-Minimum Withdraw 50৳
+<div class="card"
+id="historyCard"
+style="display:none;">
+
+<h2>উইথড্র হিস্টরি</h2>
+
+<div id="withdrawHistory">
+
+<p>কোন হিস্টরি নেই</p>
+
 </div>
+
+</div>
+
+</div>
+
+<!-- REFER -->
+
+<div id="refer"
+class="page">
+
+<div class="card">
+
+<h2>রেফার করুন</h2>
+
+<div class="ref-box">
+
+<p>আপনার রেফার কোড</p>
+
+<h1 id="refCode"></h1>
+
+<button class="green"
+style="width:100%;margin-top:10px;"
+onclick="shareReferral()">
+
+শেয়ার করুন
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- RANKING -->
+
+<div id="ranking"
+class="page">
+
+<div class="card">
+
+<h2>বাংলাদেশ লাইভ র‍্যাঙ্ক</h2>
+
+<div id="rankingBox"></div>
+
+</div>
+
+</div>
+
+<!-- RULES -->
+
+<div id="rules"
+class="page">
+
+<div class="card">
+
+<h2 style="
+font-size:24px;
+margin-bottom:15px;
+">
+
+📜 নিয়মাবলী
+
+</h2>
+
+<div style="
+line-height:34px;
+font-size:17px;
+color:#333;
+">
+
+🌸 আসসালামু আলাইকুম 🌸<br><br>
+
+🤖 স্বাগতম আপনাকে আমাদের বটে 💖<br><br>
+
+🎉 আমরা এই বট ইউজারদেরকে<br>
+
+💯 ১০০% পেমেন্ট দিচ্ছি ✅<br><br>
+
+🔥 আমাদের এই বটে কোনো রকম<br>
+
+💸 ইনভেস্ট ছাড়াই প্রতিদিন<br><br>
+
+💰 ৫০০ – ১,০০০ টাকা পর্যন্ত<br>
+
+ইনকাম করতে পারবেন খুব সহজেই 👈<br><br>
+
+⚡ ঘরে বসেই কাজ করুন<br><br>
+
+📲 মোবাইল দিয়েই ইনকাম শুরু করুন<br><br>
+
+🎯 আজই জয়েন হয়ে কাজ শুরু করুন 🚀
+
+</div>
+
+</div>
+
+</div>
+
+<!-- PROFILE -->
+
+<div id="profile"
+class="page">
+
+<div class="card profile">
+
+<img id="profilePic"
+src="https://i.ibb.co/0jqHpnp/user.png">
+
+<h2 id="name">
+Telegram User
+</h2>
+
+<p id="userId">
+ID: 00000
+</p>
+
+<button class="red"
+onclick="logoutUser()">
+
+লগআউট
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- NAVBAR -->
+
+<div class="bottom-nav">
+
+<div class="nav-btn"
+onclick="showPage('home')">
+
+<i class="fa-solid fa-house"></i>
+
+হোম
+
+</div>
+
+<div class="nav-btn"
+onclick="showPage('wallet')">
+
+<i class="fa-solid fa-wallet"></i>
+
+ওয়ালেট
+
+</div>
+
+<div class="nav-btn"
+onclick="showPage('refer')">
+
+<i class="fa-solid fa-user-group"></i>
+
+রেফার
+
+</div>
+
+<div class="nav-btn"
+onclick="showPage('ranking')">
+
+<i class="fa-solid fa-trophy"></i>
+
+র‍্যাঙ্ক
+
+</div>
+
+<div class="nav-btn"
+onclick="showPage('rules')">
+
+<i class="fa-solid fa-file-lines"></i>
+
+নিয়ম
+
+</div>
+
+<div class="nav-btn"
+onclick="showPage('profile')">
+
+<i class="fa-solid fa-user"></i>
+
+প্রোফাইল
 
 </div>
 
@@ -215,39 +557,92 @@ Minimum Withdraw 50৳
 
 <script>
 
-// USER ID
+// TELEGRAM
 
-let uid = localStorage.getItem("uid");
+let tg =
+window.Telegram.WebApp;
 
-if(!uid){
+tg.expand();
 
-uid =
-"USER_" +
-Math.floor(Math.random()*999999);
+let userId = "00000";
+let userName = "Telegram User";
+let userPhoto =
+"https://i.ibb.co/0jqHpnp/user.png";
 
-localStorage.setItem("uid",uid);
+if(tg.initDataUnsafe.user){
+
+let user =
+tg.initDataUnsafe.user;
+
+userId =
+user.id || "00000";
+
+userName =
+user.first_name ||
+"Telegram User";
+
+if(user.photo_url){
+
+userPhoto =
+user.photo_url;
 
 }
 
-document.getElementById("uid")
-.innerText = uid;
+document.getElementById("name")
+.innerText =
+userName;
 
+document.getElementById("userId")
+.innerText =
+"ID: " + userId;
+
+document.getElementById("profilePic")
+.src =
+userPhoto;
+
+}
+
+// TOAST
+
+function toast(msg){
+
+let t =
+document.getElementById("toast");
+
+t.innerText = msg;
+
+t.style.display =
+"block";
+
+setTimeout(()=>{
+
+t.style.display =
+"none";
+
+},3000);
+
+}
+
+// PAGE
+
+function showPage(page){
+
+document
+.querySelectorAll(".page")
+.forEach(p=>
+p.classList.remove("active")
+);
+
+document
+.getElementById(page)
+.classList.add("active");
+
+}
 
 // BALANCE
 
 let balance =
-localStorage.getItem("balance");
-
-if(!balance){
-
-balance = 0;
-
-localStorage.setItem(
-"balance",
-balance
-);
-
-}
+localStorage.getItem("balance") || 0;
 
 updateBalance();
 
@@ -257,33 +652,11 @@ document.getElementById("balance")
 .innerText =
 parseFloat(balance).toFixed(2);
 
-}
-
-
-// CHECK SDK
-
-function checkSDK(){
-
-if(typeof show_10842680 === "function"){
-
-document.getElementById("status")
+document.getElementById("walletBalance")
 .innerText =
-"✅ Ads Ready";
-
-}else{
-
-document.getElementById("status")
-.innerText =
-"⚠️ Ads Loading...";
-
-setTimeout(checkSDK,1000);
+parseFloat(balance).toFixed(2);
 
 }
-
-}
-
-checkSDK();
-
 
 // ADD MONEY
 
@@ -301,98 +674,95 @@ updateBalance();
 
 }
 
+// SDK CHECK
+
+function sdkReady(){
+
+return typeof
+show_10842680
+=== "function";
+
+}
 
 // REWARD AD
 
-function showRewardAd(){
+async function rewardAd(){
 
 document.getElementById("status")
 .innerText =
-"🎁 Opening Reward Ad...";
+"এড লোড হচ্ছে...";
 
-if(typeof show_10842680 === "function"){
+if(sdkReady()){
 
-show_10842680()
+try{
 
-.then(()=>{
+await show_10842680();
 
 addMoney();
 
-document.getElementById("status")
-.innerText =
-"✅ 0.15৳ Added";
-
-})
-
-.catch(()=>{
+toast("০.১৫৳ যোগ হয়েছে");
 
 document.getElementById("status")
 .innerText =
-"❌ Reward Ad Failed";
+"এড দেখা সম্পন্ন";
 
-});
+}catch(err){
+
+toast("এড এখন পাওয়া যাচ্ছে না");
+
+console.log(err);
+
+}
 
 }else{
 
-document.getElementById("status")
-.innerText =
-"⚠️ SDK Not Ready";
+toast("SDK Ready হয়নি");
 
 }
 
 }
-
 
 // POPUP AD
 
-function showPopupAd(){
+async function popupAd(){
 
 document.getElementById("status")
 .innerText =
-"⚡ Opening Popup...";
+"পপআপ এড লোড হচ্ছে...";
 
-if(typeof show_10842680 === "function"){
+if(sdkReady()){
 
-show_10842680('pop')
+try{
 
-.then(()=>{
+await show_10842680('pop');
 
 addMoney();
 
-document.getElementById("status")
-.innerText =
-"✅ Popup Reward Added";
-
-})
-
-.catch(()=>{
+toast("০.১৫৳ যোগ হয়েছে");
 
 document.getElementById("status")
 .innerText =
-"❌ Popup Failed";
+"পপআপ এড সম্পন্ন";
 
-});
+}catch(err){
+
+toast("পপআপ এড পাওয়া যাচ্ছে না");
+
+}
 
 }else{
 
-document.getElementById("status")
-.innerText =
-"⚠️ Popup Not Ready";
+toast("SDK Ready হয়নি");
 
 }
 
 }
-
 
 // AUTO ADS
 
-function startAutoAds(){
+function startAds(){
 
-document.getElementById("status")
-.innerText =
-"📲 Auto Ads Running";
-
-if(typeof show_10842680 === "function"){
+if(sdkReady()){
 
 show_10842680({
 
@@ -410,32 +780,78 @@ everyPage:false
 
 });
 
+toast("অটো এড চালু হয়েছে");
+
 }else{
 
-document.getElementById("status")
+toast("SDK Ready হয়নি");
+
+}
+
+}
+
+// REF CODE
+
+let refCode =
+localStorage.getItem("refCode");
+
+if(!refCode){
+
+refCode =
+Math.random()
+.toString(36)
+.substring(2,8)
+.toUpperCase();
+
+localStorage.setItem(
+"refCode",
+refCode
+);
+
+}
+
+document.getElementById("refCode")
 .innerText =
-"⚠️ Auto Ads Failed";
+refCode;
+
+// SHARE
+
+function shareReferral(){
+
+let link =
+
+"https://t.me/Ycxgovxfykojcx_bot?start="
++ refCode;
+
+navigator.clipboard
+.writeText(link);
+
+toast("রেফার লিংক কপি হয়েছে");
 
 }
-
-}
-
 
 // WITHDRAW
 
 function withdrawNow(){
 
+let amount =
+document.getElementById(
+"withdrawAmount"
+).value;
+
 let method =
-document.getElementById("method").value;
+document.getElementById(
+"method"
+).value;
 
 let number =
-document.getElementById("number").value;
+document.getElementById(
+"number"
+).value;
 
-if(parseFloat(balance) < 50){
+if(amount < 50){
 
-alert(
-"Minimum Withdraw 50৳"
-);
+toast("মিনিমাম ৫০৳");
 
 return;
 
@@ -443,34 +859,195 @@ return;
 
 if(number.length < 11){
 
-alert(
-"Enter Valid Number"
-);
+toast("সঠিক নাম্বার দিন");
 
 return;
 
 }
 
-alert(
-
-"✅ Withdraw Request Sent\n\n" +
-
-"Method: " + method +
-
-"\nNumber: " + number +
-
-"\nAmount: " +
-
-parseFloat(balance)
-.toFixed(2)
-
-+ "৳"
-
+let history =
+JSON.parse(
+localStorage.getItem(
+"withdrawHistory"
+) || "[]"
 );
+
+history.unshift({
+
+amount:amount,
+method:method,
+status:"Pending"
+
+});
+
+localStorage.setItem(
+"withdrawHistory",
+JSON.stringify(history)
+);
+
+toast("উইথড্র রিকুয়েস্ট পাঠানো হয়েছে");
+
+loadWithdrawHistory();
+
+}
+
+// HISTORY
+
+function toggleHistory(){
+
+let box =
+document.getElementById(
+"historyCard"
+);
+
+if(box.style.display == "none"){
+
+box.style.display = "block";
+
+loadWithdrawHistory();
+
+}else{
+
+box.style.display = "none";
+
+}
+
+}
+
+function loadWithdrawHistory(){
+
+let history =
+JSON.parse(
+localStorage.getItem(
+"withdrawHistory"
+) || "[]"
+);
+
+let html = "";
+
+history.forEach((item)=>{
+
+html += `
+
+<div class="task">
+
+<div>
+
+<b>${item.amount}৳</b><br>
+
+<small>${item.method}</small>
+
+</div>
+
+<button class="${
+item.status == 'Success'
+? 'green'
+: 'orange'
+}">
+
+${item.status}
+
+</button>
+
+</div>
+
+`;
+
+});
+
+if(html == ""){
+
+html =
+"<p>কোন হিস্টরি নেই</p>";
+
+}
+
+document.getElementById(
+"withdrawHistory"
+).innerHTML = html;
+
+}
+
+// RANKING
+
+const bdNames = [
+
+"Rahim Ahmed",
+"Karim Hasan",
+"Emran Hossain",
+"Jahid Islam",
+"Tamim Khan",
+"Nahid Hasan",
+"Rakib Ahmed",
+"Fahim Chowdhury",
+"Mehedi Hasan",
+"Shakib Al Hasan"
+
+];
+
+function randomBalance(){
+
+return (
+Math.random() * 900 + 100
+).toFixed(2);
+
+}
+
+function loadRanking(){
+
+let html = "";
+
+bdNames.forEach((name,index)=>{
+
+html += `
+
+<div class="task">
+
+<div>
+
+<b>
+#${index+1}
+${name}
+</b><br>
+
+<small>
+${randomBalance()}৳
+</small>
+
+</div>
+
+<i class="fa-solid fa-trophy"
+style="
+color:#ff9800;
+font-size:22px;
+">
+</i>
+
+</div>
+
+`;
+
+});
+
+document.getElementById(
+"rankingBox"
+).innerHTML = html;
+
+}
+
+loadRanking();
+
+// LOGOUT
+
+function logoutUser(){
+
+localStorage.clear();
+
+location.reload();
 
 }
 
 </script>
 
 </body>
-</html>
+  </html
